@@ -19,12 +19,41 @@ namespace MazeLibrary
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    Cells.Add(new Wall(x, y));
+                    Cells.Add(new Ground(x, y));
                 }
             }
         }
 
         public List<BaseCell> Cells { get; } = new List<BaseCell>();
+
+
+        public void TryToStep(Direction direction)
+        {
+            BaseCell cellToMove = null;
+
+            var hero = Player.GetPlayer;
+
+            switch (direction)
+            {
+                case Direction.Up:
+                    cellToMove = this[hero.Coordinates.X, hero.Coordinates.Y - 1];
+                    break;
+                case Direction.Right:
+                    cellToMove = this[hero.Coordinates.X + 1, hero.Coordinates.Y ];
+                    break;
+                case Direction.Down:
+                    cellToMove = this[hero.Coordinates.X, hero.Coordinates.Y + 1];
+                    break;
+                case Direction.Left:
+                    cellToMove = this[hero.Coordinates.X - 1, hero.Coordinates.Y];
+                    break;
+            }
+
+            if (cellToMove?.TryToStep() ?? false)
+            {
+                hero.Coordinates = cellToMove.Coordinates;
+            }
+        }
 
         public BaseCell this[int x, int y]
         {
